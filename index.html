@@ -4,18 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Childhood Trauma & Schizophrenia Dashboard</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
-    <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -25,20 +17,19 @@
             overflow-x: hidden;
         }
         
-        .dashboard {
-            padding: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+        .dashboard { padding: 2rem; max-width: 1400px; margin: 0 auto; }
         
         .hero {
             text-align: center;
             padding: 4rem 2rem;
             margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s ease forwards;
         }
         
         .hero h1 {
-            font-size: 3rem;
+            font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 700;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
@@ -57,7 +48,7 @@
         
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
             margin-bottom: 3rem;
         }
@@ -68,39 +59,23 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 20px;
             padding: 2rem;
-            cursor: pointer;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
             transition: transform 0.3s ease;
         }
         
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
         
-        .stat-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
+        .stat-card:hover { transform: translateY(-8px) scale(1.02); }
         
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-label {
-            font-size: 0.9rem;
-            color: #a0a0cc;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .stat-desc {
-            font-size: 0.85rem;
-            color: #8080aa;
-            margin-top: 0.5rem;
-            line-height: 1.5;
-        }
+        .stat-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .stat-value { font-size: 2.5rem; font-weight: 700; color: #fff; margin-bottom: 0.5rem; }
+        .stat-label { font-size: 0.9rem; color: #a0a0cc; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-desc { font-size: 0.85rem; color: #8080aa; margin-top: 0.5rem; line-height: 1.5; }
         
         .section {
             background: rgba(255, 255, 255, 0.03);
@@ -108,7 +83,15 @@
             border-radius: 24px;
             padding: 2.5rem;
             margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.6s ease forwards;
         }
+        
+        .section:nth-of-type(1) { animation-delay: 0.5s; }
+        .section:nth-of-type(2) { animation-delay: 0.6s; }
+        .section:nth-of-type(3) { animation-delay: 0.7s; }
+        .section:nth-of-type(4) { animation-delay: 0.8s; }
         
         .section-title {
             font-size: 1.5rem;
@@ -118,36 +101,6 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-        }
-        
-        .chart-container {
-            height: 400px;
-            margin-top: 2rem;
-        }
-        
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-        
-        .info-card {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 16px;
-            padding: 1.5rem;
-            border-left: 4px solid #667eea;
-        }
-        
-        .info-card h3 {
-            font-size: 1.1rem;
-            color: #fff;
-            margin-bottom: 0.75rem;
-        }
-        
-        .info-card p {
-            font-size: 0.9rem;
-            color: #a0a0cc;
-            line-height: 1.6;
         }
         
         .pulse-dot {
@@ -164,10 +117,56 @@
             50% { opacity: 0.5; transform: scale(1.2); }
         }
         
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .chart-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .bar-chart { display: flex; flex-direction: column; gap: 1rem; }
+        .bar-item { display: flex; align-items: center; gap: 1rem; }
+        .bar-label { width: 120px; font-size: 0.85rem; color: #a0a0cc; }
+        .bar-wrapper { flex: 1; background: rgba(255,255,255,0.1); border-radius: 8px; height: 32px; overflow: hidden; }
+        .bar-fill {
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            width: 0;
+            transition: width 1s ease-out;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .info-card {
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border-left: 4px solid #667eea;
+            transition: transform 0.3s ease;
+        }
+        
+        .info-card:hover { transform: translateX(10px); }
+        .info-card h3 { font-size: 1.1rem; color: #fff; margin-bottom: 0.75rem; }
+        .info-card p { font-size: 0.9rem; color: #a0a0cc; line-height: 1.6; }
+        
         .risk-factors {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 0.75rem;
             margin-top: 1.5rem;
         }
         
@@ -178,59 +177,304 @@
             border-radius: 50px;
             font-size: 0.85rem;
             font-weight: 500;
+            opacity: 0;
+            animation: fadeIn 0.5s ease forwards;
         }
+        
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        
+        .two-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
+        
+        .pie-container { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 2rem; }
+        .pie-chart { width: 250px; height: 250px; border-radius: 50%; position: relative; }
+        .pie-legend { display: flex; flex-direction: column; gap: 0.5rem; }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #a0a0cc; }
+        .legend-color { width: 12px; height: 12px; border-radius: 3px; }
+        
+        .line-chart { position: relative; height: 200px; }
+        .line-svg { width: 100%; height: 100%; }
         
         .footer {
             text-align: center;
             padding: 3rem 2rem;
             color: #8080aa;
             font-size: 0.9rem;
+            opacity: 0;
+            animation: fadeIn 0.6s ease 1s forwards;
         }
         
         .scroll-indicator {
             text-align: center;
             margin: 2rem 0;
             animation: bounce 2s infinite;
+            color: #667eea;
         }
         
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(10px); }
         }
+        
+        .comparison-table { width: 100%; border-collapse: collapse; }
+        .comparison-table th, .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .comparison-table th { color: #667eea; font-weight: 600; }
+        .comparison-table td { color: #a0a0cc; }
+        .comparison-bar { height: 8px; border-radius: 4px; margin-top: 5px; }
+        
+        @media (max-width: 768px) {
+            .dashboard { padding: 1rem; }
+            .hero { padding: 2rem 1rem; }
+            .section { padding: 1.5rem; }
+            .two-col { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div class="dashboard">
+        <div class="hero">
+            <h1>Childhood Trauma & Schizophrenia</h1>
+            <p>Exploring the profound impact of adverse childhood experiences on mental health outcomes, quality of life, and the development of psychotic disorders.</p>
+            <div class="scroll-indicator">↓</div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">🧠</div>
+                <div class="stat-value">2-5x</div>
+                <div class="stat-label">Increased Risk</div>
+                <div class="stat-desc">Higher likelihood of developing schizophrenia with 4+ adverse childhood experiences</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value">75%</div>
+                <div class="stat-label">Prevalence Rate</div>
+                <div class="stat-desc">Of schizophrenia patients report experiencing childhood trauma</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⚠️</div>
+                <div class="stat-value">4.5x</div>
+                <div class="stat-label">Risk Multiplier</div>
+                <div class="stat-desc">Risk increase for psychosis onset with severe childhood adversity</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💔</div>
+                <div class="stat-value">-40%</div>
+                <div class="stat-label">QoL Impact</div>
+                <div class="stat-desc">Reduction in quality of life scores for trauma-exposed patients</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title"><span class="pulse-dot"></span>Risk by Adverse Childhood Experiences (ACEs)</h2>
+            <p style="color: #a0a0cc; margin-bottom: 1rem;">Each adverse childhood experience compounds the risk of developing psychotic symptoms.</p>
+            <div class="chart-container">
+                <div class="bar-chart" id="aceChart"></div>
+            </div>
+        </div>
+        
+        <div class="two-col">
+            <div class="section">
+                <h2 class="section-title"><span class="pulse-dot"></span>Types of Childhood Trauma</h2>
+                <div class="pie-container" id="traumaPie"></div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><span class="pulse-dot"></span>Symptom Severity Comparison</h2>
+                <div class="chart-container">
+                    <table class="comparison-table">
+                        <thead>
+                            <tr><th>Symptom</th><th>No Trauma</th><th>With Trauma</th></tr>
+                        </thead>
+                        <tbody id="symptomTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title"><span class="pulse-dot"></span>Cumulative Risk Over Lifetime</h2>
+            <div class="chart-container">
+                <div class="line-chart">
+                    <svg class="line-svg" id="timelineChart" viewBox="0 0 800 200" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#667eea"/>
+                                <stop offset="100%" style="stop-color:#764ba2"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title"><span class="pulse-dot"></span>Key Research Findings</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>🔬 Biological Mechanisms</h3>
+                    <p>Childhood trauma alters HPA axis functioning, leading to dysregulated cortisol patterns and increased inflammatory markers that predispose to psychosis.</p>
+                </div>
+                <div class="info-card">
+                    <h3>🧬 Gene-Environment Interaction</h3>
+                    <p>Individuals with COMT Val158Met polymorphism show heightened sensitivity to childhood adversity, with 3x increased psychosis risk.</p>
+                </div>
+                <div class="info-card">
+                    <h3>📉 Treatment Response</h3>
+                    <p>Trauma-exposed patients show poorer response to antipsychotics and require integrated trauma-informed care approaches.</p>
+                </div>
+                <div class="info-card">
+                    <h3>🔄 Revictimization Risk</h3>
+                    <p>Childhood abuse survivors with psychosis face 5x higher risk of adult victimization, creating cycles of trauma.</p>
+                </div>
+            </div>
+            
+            <h3 style="color: #fff; margin: 2rem 0 1rem;">Risk Factors for Poor Outcomes</h3>
+            <div class="risk-factors">
+                <span class="risk-badge" style="animation-delay: 0.1s">Multiple trauma types</span>
+                <span class="risk-badge" style="animation-delay: 0.2s">Earlier age of onset</span>
+                <span class="risk-badge" style="animation-delay: 0.3s">Caregiver mental illness</span>
+                <span class="risk-badge" style="animation-delay: 0.4s">Prolonged duration</span>
+                <span class="risk-badge" style="animation-delay: 0.5s">Lack of social support</span>
+                <span class="risk-badge" style="animation-delay: 0.6s">Socioeconomic disadvantage</span>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title"><span class="pulse-dot"></span>Quality of Life Impact</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3>🏠 Housing Stability</h3>
+                    <p>Trauma-exposed patients 3x more likely to experience housing instability and homelessness</p>
+                </div>
+                <div class="info-card">
+                    <h3>💼 Employment</h3>
+                    <p>42% lower employment rates compared to non-trauma schizophrenia patients</p>
+                </div>
+                <div class="info-card">
+                    <h3>👥 Social Functioning</h3>
+                    <p>Significantly impaired interpersonal relationships and social withdrawal patterns</p>
+                </div>
+                <div class="info-card">
+                    <h3>🎯 Recovery Trajectory</h3>
+                    <p>Longer hospitalizations and more frequent relapse episodes</p>
+                </div>
+                <div class="info-card">
+                    <h3>😔 Depression Comorbidity</h3>
+                    <p>68% comorbid depression rate vs 35% in non-trauma patients</p>
+                </div>
+                <div class="info-card">
+                    <h3>💊 Medication Adherence</h3>
+                    <p>Lower adherence rates (52% vs 71%) due to trust and trauma-related issues</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Data compiled from peer-reviewed research including meta-analyses by Varese et al. (2012), Matheson et al. (2013), and recent longitudinal studies.</p>
+            <p style="margin-top: 1rem; font-size: 0.8rem;">⚠️ This dashboard is for educational purposes. For mental health support, consult qualified professionals.</p>
+        </div>
+    </div>
     
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-        const { motion, AnimatePresence } = window.Motion;
-        const { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } = window.Recharts;
-        
-        // Data based on research
-        const prevalenceData = [
-            { type: 'No Childhood Trauma', risk: 0.7, color: '#4ade80' },
-            { type: '1 ACE', risk: 1.3, color: '#fbbf24' },
-            { type: '2-3 ACEs', risk: 2.1, color: '#fb923c' },
-            { type: '4+ ACEs', risk: 4.5, color: '#ef4444' }
+    <script>
+        // ACE Chart
+        const aceData = [
+            { label: 'No Childhood Trauma', value: 0.7, color: '#4ade80' },
+            { label: '1 ACE', value: 1.3, color: '#fbbf24' },
+            { label: '2-3 ACEs', value: 2.1, color: '#fb923c' },
+            { label: '4+ ACEs', value: 4.5, color: '#ef4444' }
         ];
         
-        const traumaTypes = [
-            { name: 'Physical Abuse', value: 35, color: '#667eea' },
-            { name: 'Emotional Abuse', value: 42, color: '#764ba2' },
-            { name: 'Sexual Abuse', value: 28, color: '#f093fb' },
+        const aceChart = document.getElementById('aceChart');
+        aceData.forEach((item, i) => {
+            const barItem = document.createElement('div');
+            barItem.className = 'bar-item';
+            barItem.innerHTML = `
+                <div class="bar-label">${item.label}</div>
+                <div class="bar-wrapper">
+                    <div class="bar-fill" style="background: ${item.color}; width: 0;" data-width="${item.value * 20}%">${item.value}x</div>
+                </div>
+            `;
+            aceChart.appendChild(barItem);
+            setTimeout(() => {
+                barItem.querySelector('.bar-fill').style.width = item.value * 20 + '%';
+            }, 100 + i * 150);
+        });
+        
+        // Trauma Pie Chart
+        const traumaData = [
             { name: 'Neglect', value: 45, color: '#4facfe' },
-            { name: 'Household Dysfunction', value: 38, color: '#00f2fe' }
+            { name: 'Emotional Abuse', value: 42, color: '#764ba2' },
+            { name: 'Household Dysfunction', value: 38, color: '#00f2fe' },
+            { name: 'Physical Abuse', value: 35, color: '#667eea' },
+            { name: 'Sexual Abuse', value: 28, color: '#f093fb' }
         ];
         
-        const outcomesData = [
-            { symptom: 'Hallucinations', notrauma: 45, trauma: 78 },
-            { symptom: 'Delusions', notrauma: 52, trauma: 81 },
-            { symptom: 'Negative Symptoms', notrauma: 38, trauma: 72 },
-            { symptom: 'Cognitive Impairment', notrauma: 42, trauma: 68 },
-            { symptom: 'Social Withdrawal', notrauma: 35, trauma: 76 }
+        let cumulative = 0;
+        const pieSlices = traumaData.map(item => {
+            const start = cumulative;
+            cumulative += item.value;
+            return { ...item, start, end: cumulative };
+        });
+        
+        const pieContainer = document.getElementById('traumaPie');
+        const total = cumulative;
+        
+        let svgContent = `<svg viewBox="0 0 200 200" style="width: 250px; height: 250px; transform: rotate(-90deg);">`;
+        pieSlices.forEach(slice => {
+            const startAngle = (slice.start / total) * Math.PI * 2;
+            const endAngle = (slice.end / total) * Math.PI * 2;
+            const x1 = 100 + 80 * Math.cos(startAngle);
+            const y1 = 100 + 80 * Math.sin(startAngle);
+            const x2 = 100 + 80 * Math.cos(endAngle);
+            const y2 = 100 + 80 * Math.sin(endAngle);
+            const largeArc = endAngle - startAngle > Math.PI ? 1 : 0;
+            
+            svgContent += `<path d="M 100 100 L ${x1} ${y1} A 80 80 0 ${largeArc} 1 ${x2} ${y2} Z" 
+                fill="${slice.color}" stroke="rgba(0,0,0,0.3)" stroke-width="2"/>`;
+        });
+        svgContent += `<circle cx="100" cy="100" r="50" fill="#1a1a2e"/></svg>`;
+        
+        let legendContent = '<div class="pie-legend">';
+        traumaData.forEach(item => {
+            legendContent += `<div class="legend-item"><span class="legend-color" style="background: ${item.color}"></span>${item.name} (${item.value}%)</div>`;
+        });
+        legendContent += '</div>';
+        
+        pieContainer.innerHTML = svgContent + legendContent;
+        
+        // Symptom Table
+        const symptoms = [
+            { name: 'Hallucinations', notrauma: 45, trauma: 78 },
+            { name: 'Delusions', notrauma: 52, trauma: 81 },
+            { name: 'Negative Symptoms', notrauma: 38, trauma: 72 },
+            { name: 'Cognitive Impairment', notrauma: 42, trauma: 68 },
+            { name: 'Social Withdrawal', notrauma: 35, trauma: 76 }
         ];
         
+        const symptomTable = document.getElementById('symptomTable');
+        symptoms.forEach(s => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${s.name}</td>
+                <td>
+                    ${s.notrauma}%
+                    <div class="comparison-bar" style="background: #4ade80; width: ${s.notrauma}%"></div>
+                </td>
+                <td>
+                    ${s.trauma}%
+                    <div class="comparison-bar" style="background: #ef4444; width: ${s.trauma}%"></div>
+                </td>
+            `;
+            symptomTable.appendChild(row);
+        });
+        
+        // Timeline Chart
         const timelineData = [
             { age: '0-5', risk: 10 },
             { age: '6-12', risk: 25 },
@@ -239,360 +483,80 @@
             { age: '26+', risk: 85 }
         ];
         
-        const StatCard = ({ icon, value, label, desc, delay }) => (
-            <motion.div
-                className="stat-card"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay }}
-                whileHover={{ scale: 1.03, y: -8 }}
-            >
-                <div className="stat-icon">{icon}</div>
-                <motion.div 
-                    className="stat-value"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1, delay: delay + 0.3 }}
-                >
-                    {value}
-                </motion.div>
-                <div className="stat-label">{label}</div>
-                <div className="stat-desc">{desc}</div>
-            </motion.div>
-        );
+        const svg = document.getElementById('timelineChart');
+        const padding = 40;
+        const width = 800 - padding * 2;
+        const height = 200 - padding * 2;
         
-        const App = () => {
-            const [activeTab, setActiveTab] = useState('overview');
+        let pathD = '';
+        const points = timelineData.map((d, i) => ({
+            x: padding + (i / (timelineData.length - 1)) * width,
+            y: padding + height - (d.risk / 100) * height
+        }));
+        
+        points.forEach((p, i) => {
+            if (i === 0) pathD += `M ${p.x} ${p.y}`;
+            else {
+                const prev = points[i-1];
+                const cp1x = prev.x + (p.x - prev.x) / 3;
+                const cp2x = prev.x + 2 * (p.x - prev.x) / 3;
+                pathD += ` C ${cp1x} ${prev.y}, ${cp2x} ${p.y}, ${p.x} ${p.y}`;
+            }
+        });
+        
+        // Draw line
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', pathD);
+        path.setAttribute('stroke', 'url(#lineGradient)');
+        path.setAttribute('stroke-width', '4');
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke-linecap', 'round');
+        svg.appendChild(path);
+        
+        // Draw points and labels
+        points.forEach((p, i) => {
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', p.x);
+            circle.setAttribute('cy', p.y);
+            circle.setAttribute('r', '6');
+            circle.setAttribute('fill', '#667eea');
+            circle.setAttribute('stroke', '#fff');
+            circle.setAttribute('stroke-width', '2');
+            svg.appendChild(circle);
             
-            return (
-                <div className="dashboard">
-                    <motion.div 
-                        className="hero"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 1 }}
-                    >
-                        <motion.h1
-                            initial={{ opacity: 0, y: -30 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                        >
-                            Childhood Trauma & Schizophrenia
-                        </motion.h1>
-                        <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                        >
-                            Exploring the profound impact of adverse childhood experiences on mental health outcomes, 
-                            quality of life, and the development of psychotic disorders.
-                        </motion.p>
-                        <motion.div 
-                            className="scroll-indicator"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ delay: 1.5 }}
-                        >
-                            <span style={{ fontSize: '2rem' }}>↓</span>
-                        </motion.div>
-                    </motion.div>
-                    
-                    <div className="stats-grid">
-                        <StatCard 
-                            icon="🧠" 
-                            value="2-5x" 
-                            label="Increased Risk" 
-                            desc="Higher likelihood of developing schizophrenia with 4+ adverse childhood experiences"
-                            delay={0}
-                        />
-                        <StatCard 
-                            icon="📊" 
-                            value="75%" 
-                            label="Prevalence Rate" 
-                            desc="Of schizophrenia patients report experiencing childhood trauma"
-                            delay={0.1}
-                        />
-                        <StatCard 
-                            icon="⚠️" 
-                            value="4.5x" 
-                            label="Risk Multiplier" 
-                            desc="Risk increase for psychosis onset with severe childhood adversity"
-                            delay={0.2}
-                        />
-                        <StatCard 
-                            icon="💔" 
-                            value="-40%" 
-                            label="QoL Impact" 
-                            desc="Reduction in quality of life scores for trauma-exposed patients"
-                            delay={0.3}
-                        />
-                    </div>
-                    
-                    <motion.div 
-                        className="section"
-                        initial={{ opacity: 0, x: -50 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <h2 className="section-title">
-                            <span className="pulse-dot"></span>
-                            Risk by Adverse Childhood Experiences (ACEs)
-                        </h2>
-                        <p style={{color: '#a0a0cc', marginBottom: '1rem'}}>
-                            Each adverse childhood experience compounds the risk of developing psychotic symptoms.
-                            The dose-response relationship shows exponential risk increase with multiple ACEs.
-                        </p>
-                        <div className="chart-container">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <BarChart data={prevalenceData} layout="vertical">
-                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                                    <XAxis type="number" stroke="#a0a0cc" />
-                                    <YAxis dataKey="type" type="category" stroke="#a0a0cc" width={150} />
-                                    <Tooltip 
-                                        contentStyle={{background: '#1a1a2e', border: '1px solid #667eea', borderRadius: '8px'}}
-                                        labelStyle={{color: '#fff'}}
-                                    />
-                                    <Bar dataKey="risk" radius={[0, 8, 8, 0]}>
-                                        {prevalenceData.map((entry, index) => (
-                                            <Cell key={`cell-${index}`} fill={entry.color} />
-                                        ))}
-                                    </Bar>
-                                </BarChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </motion.div>
-                    
-                    <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem', marginBottom: '2rem'}}>
-                        <motion.div 
-                            className="section"
-                            initial={{ opacity: 0, x: -50 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                        >
-                            <h2 className="section-title">
-                                <span className="pulse-dot"></span>
-                                Types of Childhood Trauma
-                            </h2>
-                            <div className="chart-container" style={{height: 300}}>
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <PieChart>
-                                        <Pie
-                                            data={traumaTypes}
-                                            cx="50%"
-                                            cy="50%"
-                                            innerRadius={60}
-                                            outerRadius={100}
-                                            paddingAngle={5}
-                                            dataKey="value"
-                                        >
-                                            {traumaTypes.map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={entry.color} />
-                                            ))}
-                                        </Pie>
-                                        <Tooltip 
-                                            contentStyle={{background: '#1a1a2e', border: '1px solid #667eea', borderRadius: '8px'}}
-                                        />
-                                    </PieChart>
-                                </ResponsiveContainer>
-                            </div>
-                            <div style={{display: 'flex', flexWrap: 'wrap', gap: '0.5rem', justifyContent: 'center', marginTop: '1rem'}}>
-                                {traumaTypes.map((t, i) => (
-                                    <span key={i} style={{display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', color: '#a0a0cc'}}>
-                                        <span style={{width: 12, height: 12, background: t.color, borderRadius: 3}}></span>
-                                        {t.name} ({t.value}%)
-                                    </span>
-                                ))}
-                            </div>
-                        </motion.div>
-                        
-                        <motion.div 
-                            className="section"
-                            initial={{ opacity: 0, x: 50 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6 }}
-                        >
-                            <h2 className="section-title">
-                                <span className="pulse-dot"></span>
-                                Symptom Severity Comparison
-                            </h2>
-                            <p style={{color: '#a0a0cc', fontSize: '0.9rem', marginBottom: '1rem'}}>
-                                Percentage of patients experiencing severe symptoms
-                            </p>
-                            <div className="chart-container" style={{height: 300}}>
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <BarChart data={outcomesData}>
-                                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                                        <XAxis dataKey="symptom" stroke="#a0a0cc" tick={{fontSize: 10}} interval={0} angle={-15} textAnchor="end" />
-                                        <YAxis stroke="#a0a0cc" />
-                                        <Tooltip 
-                                            contentStyle={{background: '#1a1a2e', border: '1px solid #667eea', borderRadius: '8px'}}
-                                        />
-                                        <Bar dataKey="notrauma" name="No Trauma" fill="#4ade80" radius={[4, 4, 0, 0]} />
-                                        <Bar dataKey="trauma" name="With Trauma" fill="#ef4444" radius={[4, 4, 0, 0]} />
-                                    </BarChart>
-                                </ResponsiveContainer>
-                            </div>
-                        </motion.div>
-                    </div>
-                    
-                    <motion.div 
-                        className="section"
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <h2 className="section-title">
-                            <span className="pulse-dot"></span>
-                            Cumulative Risk Over Lifetime
-                        </h2>
-                        <div className="chart-container">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <LineChart data={timelineData}>
-                                    <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                                    <XAxis dataKey="age" stroke="#a0a0cc" />
-                                    <YAxis stroke="#a0a0cc" />
-                                    <Tooltip 
-                                        contentStyle={{background: '#1a1a2e', border: '1px solid #667eea', borderRadius: '8px'}}
-                                    />
-                                    <Line 
-                                        type="monotone" 
-                                        dataKey="risk" 
-                                        stroke="#667eea" 
-                                        strokeWidth={3}
-                                        dot={{fill: '#667eea', strokeWidth: 2, r: 6}}
-                                        activeDot={{r: 8, fill: '#764ba2'}}
-                                    />
-                                </LineChart>
-                            </ResponsiveContainer>
-                        </div>
-                    </motion.div>
-                    
-                    <motion.div 
-                        className="section"
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <h2 className="section-title">
-                            <span className="pulse-dot"></span>
-                            Key Research Findings
-                        </h2>
-                        <div className="info-grid">
-                            <motion.div 
-                                className="info-card"
-                                whileHover={{ scale: 1.02 }}
-                            >
-                                <h3>🔬 Biological Mechanisms</h3>
-                                <p>Childhood trauma alters HPA axis functioning, leading to dysregulated cortisol patterns and increased inflammatory markers that predispose to psychosis.</p>
-                            </motion.div>
-                            <motion.div 
-                                className="info-card"
-                                whileHover={{ scale: 1.02 }}
-                            >
-                                <h3>🧬 Gene-Environment Interaction</h3>
-                                <p>Individuals with COMT Val158Met polymorphism show heightened sensitivity to childhood adversity, with 3x increased psychosis risk.</p>
-                            </motion.div>
-                            <motion.div 
-                                className="info-card"
-                                whileHover={{ scale: 1.02 }}
-                            >
-                                <h3>📉 Treatment Response</h3>
-                                <p>Trauma-exposed patients show poorer response to antipsychotics and require integrated trauma-informed care approaches.</p>
-                            </motion.div>
-                            <motion.div 
-                                className="info-card"
-                                whileHover={{ scale: 1.02 }}
-                            >
-                                <h3>🔄 Revictimization Risk</h3>
-                                <p>Childhood abuse survivors with psychosis face 5x higher risk of adult victimization, creating cycles of trauma.</p>
-                            </motion.div>
-                        </div>
-                        
-                        <div style={{marginTop: '2rem'}}>
-                            <h3 style={{color: '#fff', marginBottom: '1rem'}}>Risk Factors for Poor Outcomes</h3>
-                            <motion.div 
-                                className="risk-factors"
-                                initial={{ opacity: 0 }}
-                                whileInView={{ opacity: 1 }}
-                                viewport={{ once: true }}
-                            >
-                                {['Multiple trauma types', 'Earlier age of onset', 'Caregiver mental illness', 'Prolonged duration', 'Lack of social support', 'Socioeconomic disadvantage'].map((factor, i) => (
-                                    <motion.span 
-                                        key={i}
-                                        className="risk-badge"
-                                        initial={{ opacity: 0, scale: 0.8 }}
-                                        whileInView={{ opacity: 1, scale: 1 }}
-                                        viewport={{ once: true }}
-                                        transition={{ delay: i * 0.1 }}
-                                    >
-                                        {factor}
-                                    </motion.span>
-                                ))}
-                            </motion.div>
-                        </div>
-                    </motion.div>
-                    
-                    <motion.div 
-                        className="section"
-                        initial={{ opacity: 0, y: 50 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                    >
-                        <h2 className="section-title">
-                            <span className="pulse-dot"></span>
-                            Quality of Life Impact
-                        </h2>
-                        <div className="info-grid">
-                            {[
-                                { title: '🏠 Housing Stability', desc: 'Trauma-exposed patients 3x more likely to experience housing instability and homelessness' },
-                                { title: '💼 Employment', desc: '42% lower employment rates compared to non-trauma schizophrenia patients' },
-                                { title: '👥 Social Functioning', desc: 'Significantly impaired interpersonal relationships and social withdrawal patterns' },
-                                { title: '🎯 Recovery Trajectory', desc: 'Longer hospitalizations and more frequent relapse episodes' },
-                                { title: '😔 Depression Comorbidity', desc: '68% comorbid depression rate vs 35% in non-trauma patients' },
-                                { title: '💊 Medication Adherence', desc: 'Lower adherence rates (52% vs 71%) due to trust and trauma-related issues' }
-                            ].map((item, i) => (
-                                <motion.div 
-                                    key={i}
-                                    className="info-card"
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: i * 0.1 }}
-                                    whileHover={{ scale: 1.02, x: 10 }}
-                                >
-                                    <h3>{item.title}</h3>
-                                    <p>{item.desc}</p>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </motion.div>
-                    
-                    <motion.footer 
-                        className="footer"
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true }}
-                    >
-                        <p>Data compiled from peer-reviewed research including meta-analyses by Varese et al. (2012), 
-                        Matheson et al. (2013), and recent longitudinal studies on childhood adversity and psychosis.</p>
-                        <p style={{marginTop: '1rem', fontSize: '0.8rem'}}>
-                            ⚠️ This dashboard is for educational purposes. For mental health support, consult qualified professionals.
-                        </p>
-                    </motion.footer>
-                </div>
-            );
-        };
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', p.x);
+            text.setAttribute('y', p.y - 15);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('fill', '#a0a0cc');
+            text.setAttribute('font-size', '12');
+            text.textContent = timelineData[i].age;
+            svg.appendChild(text);
+            
+            const valueText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            valueText.setAttribute('x', p.x);
+            valueText.setAttribute('y', p.y + 25);
+            valueText.setAttribute('text-anchor', 'middle');
+            valueText.setAttribute('fill', '#fff');
+            valueText.setAttribute('font-size', '12');
+            valueText.setAttribute('font-weight', '600');
+            valueText.textContent = timelineData[i].risk + '%';
+            svg.appendChild(valueText);
+        });
         
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        // Animate line
+        const length = path.getTotalLength();
+        path.style.strokeDasharray = length;
+        path.style.strokeDashoffset = length;
+        path.style.animation = 'dash 2s ease-out forwards';
+        
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes dash {
+                to { stroke-dashoffset: 0; }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
